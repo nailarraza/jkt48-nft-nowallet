@@ -1,0 +1,65 @@
+<!-- D:\jkt48-nft-app\app\templates\verify.html -->
+<!-- Halaman ini untuk verifikasi keaslian tiket oleh publik. -->
+{% extends "layout.html" %}
+{% block content %}
+
+<!-- Fixed, Blurred Background with Dark/Light Mode Overlay -->
+<div class="fixed top-0 left-0 w-full h-full z-[-1]">
+    <!-- The actual blurred image -->
+    <div class="absolute inset-0 bg-cover bg-center filter blur-md" style="background-image: url('{{ url_for('static', filename='wpp-con1.jpg') }}');"></div>
+    <!-- Overlay to adjust for light/dark mode -->
+    <div class="absolute inset-0 bg-white/30 dark:bg-black/10"></div>
+</div>
+<br><br>
+<div class="max-w-2xl mx-auto">
+    <h1 class="text-3xl font-bold font-display mb-2 text-center text-gray-900 dark:text-white">Verifikasi Keaslian Tiket</h1>
+    <p class="mb-6 text-center text-gray-200 dark:text-gray-400">Cek Keaslian Tiket dengan memasukkan Kode Unik (UID) atau Hash NFT-nya.</p>
+    
+    <div class="bg-white dark:bg-dark-card shadow-lg rounded-lg p-6">
+        <form method="POST" class="flex flex-col sm:flex-row gap-2">
+            <input type="text" name="ticket_identifier" placeholder="     Masukkan Kode Unik (UID) atau Hash Tiket " class="flex-grow block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary dark:bg-gray-700 dark:border-gray-600" required>
+            <button type="submit" class="w-full sm:w-auto py-2 px-6 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-dark">Cek Keaslian</button>
+        </form>
+    </div>
+
+    {% if ticket %}
+    <!-- Blok ini akan muncul jika tiket ditemukan -->
+    <div class="mt-8 bg-white dark:bg-dark-card shadow-lg rounded-lg p-6 animate-fade-in">
+        <h2 class="text-2xl font-bold mb-4 text-center 
+            {% if ticket.status == 'Purchased' %} text-green-500 {% elif ticket.status == 'Used' %} text-blue-500 {% else %} text-red-500 {% endif %}
+        ">
+            {% if ticket.status == 'Purchased' %}
+                <i class="fas fa-check-circle"></i> TIKET DITEMUKAN & VALID
+            {% elif ticket.status == 'Used' %}
+                <i class="fas fa-info-circle"></i> TIKET DITEMUKAN (Telah Digunakan Check-In)
+            {% else %}
+                <i class="fas fa-times-circle"></i> TIKET DITEMUKAN (Tidak Valid)
+            {% endif %}
+        </h2>
+
+        <div class="mt-6 border-t border-gray-200 dark:border-gray-700 pt-4 space-y-3 text-sm">
+            <div class="flex justify-between"><span class="font-semibold text-gray-700 dark:text-gray-300">Event:</span><span class="font-bold text-gray-900 dark:text-white text-right">{{ ticket.event_info.title }}</span></div>
+            <div class="flex justify-between"><span class="font-semibold text-gray-700 dark:text-gray-300">Tanggal Event:</span><span class="text-gray-800 dark:text-gray-200 text-right">{{ ticket.event_info.date.strftime('%A, %d %B %Y') }}</span></div>
+            <div class="flex justify-between"><span class="font-semibold text-gray-700 dark:text-gray-300">Status Tiket:</span><span class="font-bold text-right">{{ ticket.status }}</span></div>
+            <div class="flex justify-between"><span class="font-semibold text-gray-700 dark:text-gray-300">Pemilik Terdaftar:</span><span class="font-mono bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded text-right">{{ ticket.owner.full_name }}</span></div>
+            <div class="flex justify-between"><span class="font-semibold text-gray-700 dark:text-gray-300">Kode Unik (UID):</span><span class="font-mono text-right">{{ ticket.ticket_uid }}</span></div>
+        </div>
+
+        <div class="mt-6 p-3 bg-yellow-50 dark:bg-yellow-900/50 rounded-lg text-yellow-800 dark:text-yellow-200 text-xs">
+            <p><span class="font-bold">Penting:</span> Halaman ini hanya memverifikasi keaslian dan status tiket. Kepemilikan tiket yang sah tetap berada pada akun pemilik yang terdaftar.</p>
+        </div>
+    </div>
+    {% endif %}
+</div>
+<style>
+    @keyframes fade-in {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in {
+        animation: fade-in 0.5s ease-out forwards;
+    }
+</style>
+<!-- FontAwesome untuk ikon, tambahkan jika belum ada di layout utama -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+{% endblock %}

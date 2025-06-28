@@ -1,0 +1,41 @@
+<!-- D:\jkt48-nft-app\app\templates\admin\_event_form.html -->
+<!-- File partial ini berisi form yang digunakan untuk menambah dan mengedit event. -->
+<!-- Ini digunakan untuk menghindari duplikasi kode. -->
+<form method="POST" class="space-y-6">
+    <div>
+        <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nama Event</label>
+        <input type="text" name="title" id="title" value="{{ event.title if event else '' }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary dark:bg-gray-700 dark:border-gray-600" required>
+    </div>
+    <div>
+        <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Deskripsi</label>
+        <textarea name="description" id="description" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary dark:bg-gray-700 dark:border-gray-600" required>{{ event.description if event else '' }}</textarea>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+            <label for="date" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tanggal & Waktu</label>
+            <input type="datetime-local" name="date" id="date" value="{{ form_date if form_date else '' }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+        </div>
+        <div>
+            <label for="location" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Lokasi</label>
+            <input type="text" name="location" id="location" value="{{ event.location if event else '' }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary dark:bg-gray-700 dark:border-gray-600" required>
+        </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+            <label for="ticket_price" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Harga Tiket (Rp)</label>
+            <input type="number" name="ticket_price" id="ticket_price" step="1000" min="0" value="{{ event.ticket_price if event else '' }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary dark:bg-gray-700 dark:border-gray-600" required>
+        </div>
+        <div>
+            <label for="total_tickets" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Total Kuota Tiket</label>
+            <input type="number" name="total_tickets" id="total_tickets" min="1" value="{{ event.total_tickets if event else '' }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary dark:bg-gray-700 dark:border-gray-600" required>
+        </div>
+    </div>
+    <div>
+        <label for="image_url" class="block text-sm font-medium text-gray-700 dark:text-gray-300">URL Gambar Event</label>
+        <input type="url" name="image_url" id="image_url" value="{{ event.image_url if event else '' }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary dark:bg-gray-700 dark:border-gray-600" placeholder="https://contoh.com/gambar.jpg" required>
+    </div>
+    <div class="flex justify-end gap-4 pt-4">
+        <a href="{{ url_for('admin.manage_events') }}" class="py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-600 hover:bg-gray-50 dark:hover:bg-gray-500">Batal</a>
+        <button type="submit" class="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-dark">Simpan</button>
+    </div>
+</form>

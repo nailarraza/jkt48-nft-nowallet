@@ -1,0 +1,47 @@
+<!-- D:\jkt48-nft-app\app\templates\my_tickets.html -->
+<!-- Halaman ini menampilkan daftar semua tiket yang dimiliki pengguna. -->
+{% extends "layout.html" %}
+{% block content %}
+
+<!-- Fixed, Blurred Background with Dark/Light Mode Overlay -->
+<div class="fixed top-0 left-0 w-full h-full z-[-1]">
+    <!-- The actual blurred image -->
+    <div class="absolute inset-0 bg-cover bg-center filter blur-md" style="background-image: url('{{ url_for('static', filename='wpp-con1.jpg') }}');"></div>
+    <!-- Overlay to adjust for light/dark mode -->
+    <div class="absolute inset-0 bg-white/30 dark:bg-black/10"></div>
+</div>
+<br>
+<h1 class="text-3xl font-bold font-display mb-8 text-gray-800 dark:text-white">Tiket Saya</h1>
+
+<div class="space-y-6">
+    {% for ticket in tickets %}
+    <a href="{{ url_for('main.ticket_detail', ticket_id=ticket.id) }}" class="block bg-white dark:bg-dark-card rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 p-4">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <img src="{{ ticket.event_info.image_url }}" alt="[Gambar event {{ ticket.event_info.title }}]" class="w-full sm:w-32 h-32 object-cover rounded-md" onerror="this.onerror=null;this.src='https://placehold.co/128x128/DC143C/FFFFFF?text=Event';">
+            <div class="flex-grow">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full
+                    {% if ticket.status == 'Purchased' %} bg-green-200 text-green-800 dark:bg-green-700 dark:text-green-100 {% endif %}
+                    {% if ticket.status == 'Used' %} bg-blue-200 text-blue-800 dark:bg-blue-700 dark:text-blue-100 {% endif %}
+                    {% if ticket.status == 'Expired' %} bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-100 {% endif %}">
+                    {{ ticket.status }}
+                </span>
+                <h2 class="mt-2 text-xl font-bold text-gray-900 dark:text-white">{{ ticket.event_info.title }}</h2>
+                <p class="text-sm text-gray-600 dark:text-gray-400">{{ ticket.event_info.date.strftime('%A, %d %B %Y') }}</p>
+                <p class="text-sm text-gray-500 dark:text-gray-500">{{ ticket.event_info.location }}</p>
+            </div>
+            <div class="self-center">
+                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+            </div>
+        </div>
+    </a>
+    {% else %}
+    <div class="text-center py-16">
+        <h2 class="text-xl font-semibold text-gray-700 dark:text-gray-200">Anda belum memiliki tiket.</h2>
+        <p class="mt-2 text-gray-500 dark:text-gray-400">Ayo cari event seru dan amankan tiketmu!</p>
+        <a href="{{ url_for('main.events') }}" class="mt-6 inline-block bg-primary text-white font-bold py-3 px-6 rounded-lg shadow-lg hover:bg-primary-dark">
+            Lihat Semua Event
+        </a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

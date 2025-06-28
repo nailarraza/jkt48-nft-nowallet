@@ -1,0 +1,11 @@
+<!-- D:\jkt48-nft-app\app\templates\admin\edit_event.html -->
+<!-- Halaman untuk mengedit event yang sudah ada. -->
+{% extends "layout.html" %}
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <h1 class="text-3xl font-bold font-display mb-6 text-gray-800 dark:text-white">Edit Event</h1>
+    <div class="bg-white dark:bg-dark-card shadow-lg rounded-lg p-6">
+        {% include 'admin/_event_form.html' %}
+    </div>
+</div>
+{% endblock %}

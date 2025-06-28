@@ -1,0 +1,61 @@
+<!-- D:\jkt48-nft-app\app\templates\admin\verify_ticket.html -->
+<!-- Halaman untuk admin melakukan verifikasi tiket di pintu masuk. -->
+{% extends "layout.html" %}
+{% block content %}
+
+<!-- Fixed, Blurred Background with Dark/Light Mode Overlay -->
+<div class="fixed top-0 left-0 w-full h-full z-[-1]">
+    <!-- The actual blurred image -->
+    <div class="absolute inset-0 bg-cover bg-center filter blur-md" style="background-image: url('{{ url_for('static', filename='wpp-con1.jpg') }}');"></div>
+    <!-- Overlay to adjust for light/dark mode -->
+    <div class="absolute inset-0 bg-white/30 dark:bg-black/10"></div>
+</div>
+<br><br>
+<div class="max-w-2xl mx-auto">
+    <h1 class="text-3xl font-bold font-display mb-6 text-gray-800 dark:text-white">Check-In Tiket Pengunjung</h1>
+    <div class="bg-white dark:bg-dark-card shadow-lg rounded-lg p-6">
+        <p class="mb-4 text-sm text-gray-600 dark:text-gray-300">Masukkan Kode Unik Tiket (Ticket UID) atau Hash NFT untuk melakukan Check-In.</p>
+        <form method="POST" class="flex gap-2">
+            <input type="text" name="ticket_identifier" placeholder="    Masukkan Kode Unik atau Hash" class="flex-grow block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary dark:bg-gray-700 dark:border-gray-600" required>
+            <button type="submit" class="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-dark">Cari</button>
+        </form>
+    </div>
+
+    {% if ticket %}
+    <div class="mt-8 bg-white dark:bg-dark-card shadow-lg rounded-lg p-6">
+        <h2 class="text-2xl font-bold mb-4 text-center 
+            {% if ticket.status == 'Purchased' %} text-green-500 {% elif ticket.status == 'Used' %} text-blue-500 {% else %} text-red-500 {% endif %}
+        ">
+            {% if ticket.status == 'Purchased' %}
+                TIKET VALID & SIAP DIGUNAKAN
+            {% elif ticket.status == 'Used' %}
+                TIKET SUDAH DIGUNAKAN
+            {% else %}
+                TIKET TIDAK VALID ({{ ticket.status }})
+            {% endif %}
+        </h2>
+
+        <div class="text-center">
+            <img src="{{ url_for('static', filename=ticket.qr_code_url) }}" alt="QR Code Tiket" class="w-32 h-32 mx-auto border-4 border-gray-200 dark:border-gray-600 rounded-lg">
+        </div>
+
+        <div class="mt-6 border-t border-gray-200 dark:border-gray-700 pt-4 space-y-2 text-sm">
+            <div class="flex justify-between"><span class="font-semibold">Pemilik:</span><span>{{ ticket.owner.full_name or ticket.owner.username }} ({{ ticket.owner.email }})</span></div>
+            <div class="flex justify-between"><span class="font-semibold">Event:</span><span>{{ ticket.event_info.title }}</span></div>
+            <div class="flex justify-between"><span class="font-semibold">Tanggal Event:</span><span>{{ ticket.event_info.date.strftime('%d %b %Y') }}</span></div>
+            <div class="flex justify-between"><span class="font-semibold">Waktu Beli:</span><span>{{ ticket.purchase_date.strftime('%d %b %Y, %H:%M') }}</span></div>
+            <div class="flex justify-between"><span class="font-semibold">Status:</span><span class="font-bold">{{ ticket.status }}</span></div>
+            <div class="flex justify-between"><span class="font-semibold">Kode Unik:</span><span class="font-mono">{{ ticket.ticket_uid }}</span></div>
+        </div>
+
+        {% if ticket.status == 'Purchased' %}
+        <form action="{{ url_for('admin.mark_ticket_used', ticket_id=ticket.id) }}" method="POST" class="mt-6" onsubmit="return confirm('Anda yakin ingin melakukan check-in untuk tiket ini? Tindakan ini tidak dapat diurungkan.');">
+            <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg">
+                Tandai Sebagai "Telah Digunakan" (Check-in)
+            </button>
+        </form>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

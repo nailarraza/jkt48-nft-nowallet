@@ -1,0 +1,40 @@
+<!-- D:\jkt48-nft-app\app\templates\events.html -->
+<!-- Halaman ini menampilkan semua event yang tersedia. -->
+{% extends "layout.html" %}
+{% block content %}
+
+<!-- Fixed, Blurred Background with Dark/Light Mode Overlay -->
+<div class="fixed top-0 left-0 w-full h-full z-[-1]">
+    <!-- The actual blurred image -->
+    <div class="absolute inset-0 bg-cover bg-center filter blur-md" style="background-image: url('{{ url_for('static', filename='wpp-con1.jpg') }}');"></div>
+    <!-- Overlay to adjust for light/dark mode -->
+    <div class="absolute inset-0 bg-white/30 dark:bg-black/10"></div>
+</div>
+<br><br>
+<h1 class="text-3xl font-bold font-display mb-8 text-gray-800 dark:text-white text-center">Semua Event Mendatang</h1>
+
+<div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+    {% for event in events %}
+    <div class="bg-white dark:bg-dark-card rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300">
+        <a href="{{ url_for('main.event_detail', event_id=event.id) }}">
+            <img src="{{ event.image_url }}" alt="[Gambar event {{ event.title }}]" class="w-full h-56 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/600x400/DC143C/FFFFFF?text=Gagal+Muat';">
+        </a>
+        <div class="p-6">
+            <p class="text-sm text-gray-500 dark:text-gray-400">{{ event.date.strftime('%A, %d %B %Y - %H:%M WIB') }}</p>
+            <h3 class="mt-2 text-xl font-bold font-display text-gray-900 dark:text-white truncate">
+                <a href="{{ url_for('main.event_detail', event_id=event.id) }}">{{ event.title }}</a>
+            </h3>
+            <p class="mt-1 text-gray-600 dark:text-gray-400"><i class="fas fa-map-marker-alt"></i> {{ event.location }}</p>
+            <div class="mt-4 flex justify-between items-center">
+                <span class="text-xl font-bold text-primary">{{ event.ticket_price | currency }}</span>
+                <a href="{{ url_for('main.event_detail', event_id=event.id) }}" class="bg-primary text-white font-semibold py-2 px-4 rounded-lg hover:bg-primary-dark transition-colors duration-300">
+                    Beli Tiket
+                </a>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <p class="col-span-3 text-center text-gray-500 dark:text-gray-400 py-10">Saat ini belum ada event yang akan datang. Nantikan informasi selanjutnya!</p>
+    {% endfor %}
+</div>
+{% endblock %}

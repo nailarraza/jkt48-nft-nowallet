@@ -1,0 +1,101 @@
+<!-- D:\jkt48-nft-app\app\templates\layout.html -->
+<!-- MODIFIKASI: Menambahkan link 'Verifikasi Tiket' di navigasi desktop dan mobile. -->
+<!DOCTYPE html>
+<html lang="id" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.5">
+    <title>{{ title }} - JKT48 E-Ticket</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { 'sans': ['Inter', 'sans-serif'], 'display': ['Poppins', 'sans-serif'], },
+                    colors: { 'primary': '#DC143C', 'primary-dark': '#B81032', 'secondary': '#4A4A4A', 'light-bg': '#F8F9FA', 'dark-bg': '#1a202c', 'dark-card': '#2d3748',}
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-light-bg dark:bg-dark-bg text-secondary dark:text-gray-200 font-sans antialiased">
+    <div id="app" class="min-h-screen flex flex-col">
+        <!-- Header / Navbar -->
+        <header class="bg-white/70 dark:bg-dark-card/65 backdrop-blur-sm shadow-md sticky top-0 z-50">
+            <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    <div class="flex-shrink-0">
+                        <a href="{{ url_for('main.index') }}" class="flex items-center font-display text-2xl font-bold text-primary">
+                            <img src="{{ url_for('static', filename='jkt48-logo.png') }}" alt="JKT48 Logo" class="h-12 mr-3">
+                            <span>NFT Ticketing<span class="text-secondary dark:text-gray-400"> </span></span>
+                        </a>
+                    </div>
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-center space-x-4">
+                            <a href="{{ url_for('main.index') }}" class="hover:text-primary dark:hover:text-primary-dark px-3 py-2 rounded-md text-sm font-medium">Home</a>
+                            <a href="{{ url_for('main.events') }}" class="hover:text-primary dark:hover:text-primary-dark px-3 py-2 rounded-md text-sm font-medium">Events</a>
+                            <!-- === LINK BARU DI SINI (DESKTOP) === -->
+                            <a href="{{ url_for('main.verify') }}" class="hover:text-primary dark:hover:text-primary-dark px-3 py-2 rounded-md text-sm font-medium">Verifikasi Tiket</a>
+                            
+                            {% if current_user.is_authenticated %}
+                                <a href="{{ url_for('main.my_tickets') }}" class="hover:text-primary dark:hover:text-primary-dark px-3 py-2 rounded-md text-sm font-medium">Tiket Saya</a>
+                                <a href="{{ url_for('main.profile') }}" class="hover:text-primary dark:hover:text-primary-dark px-3 py-2 rounded-md text-sm font-medium">Profil</a>
+                                {% if current_user.role == 'SuperAdmin' %}
+                                    <a href="{{ url_for('admin.dashboard') }}" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold px-3 py-2 rounded-md text-sm shadow-md transition-colors">Admin Panel</a>
+                                {% endif %}
+                                <a href="{{ url_for('auth.logout') }}" class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-md text-sm font-medium">Logout</a>
+                            {% else %}
+                                <a href="{{ url_for('auth.login') }}" class="hover:text-primary dark:hover:text-primary-dark px-3 py-2 rounded-md text-sm font-medium">Login</a>
+                                <a href="{{ url_for('auth.register') }}" class="bg-primary hover:bg-primary-dark text-white px-3 py-2 rounded-md text-sm font-medium">Register</a>
+                            {% endif %}
+                            <button id="theme-toggle" type="button" class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none rounded-lg text-sm p-2.5"></button>
+                        </div>
+                    </div>
+                    <div class="-mr-2 flex md:hidden">
+                        <button type="button" id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700"><span class="sr-only">Buka menu utama</span><svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg></button>
+                    </div>
+                </div>
+            </nav>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="{{ url_for('main.index') }}" class="hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Home</a>
+                    <a href="{{ url_for('main.events') }}" class="hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Events</a>
+                    <!-- === LINK BARU DI SINI (MOBILE) === -->
+                    <a href="{{ url_for('main.verify') }}" class="hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Verifikasi Tiket</a>
+
+                     {% if current_user.is_authenticated %}
+                        <a href="{{ url_for('main.my_tickets') }}" class="hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Tiket Saya</a>
+                        <a href="{{ url_for('main.profile') }}" class="hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Profil</a>
+                         {% if current_user.role == 'SuperAdmin' %}
+                            <a href="{{ url_for('admin.dashboard') }}" class="bg-yellow-500 hover:bg-yellow-600 text-white block px-3 py-2 rounded-md text-base font-medium">Admin Panel</a>
+                        {% endif %}
+                        <a href="{{ url_for('auth.logout') }}" class="bg-red-500 hover:bg-red-600 text-white block px-3 py-2 rounded-md text-base font-medium">Logout</a>
+                    {% else %}
+                        <a href="{{ url_for('auth.login') }}" class="hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Login</a>
+                        <a href="{{ url_for('auth.register') }}" class="hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Register</a>
+                    {% endif %}
+                    <button id="theme-toggle-mobile" class="w-full text-left text-gray-400 hover:bg-gray-700 dark:hover:bg-gray-600 focus:outline-none rounded-lg text-sm p-3">Ganti Mode</button>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-grow container mx-auto p-4 sm:p-6 lg:p-8">
+            {% with messages = get_flashed_messages(with_categories=true) %}{% if messages %}{% for category, message in messages %}<div class="alert-{{ category }} mb-4 px-4 py-3 rounded-lg relative" role="alert"><strong class="font-bold capitalize">{{ category }}!</strong><span class="block sm:inline">{{ message }}</span></div>{% endfor %}{% endif %}{% endwith %}
+            {% block content %}{% endblock %}
+        </main>
+
+        <footer class="bg-white dark:bg-dark-card shadow-inner mt-8">
+            <div class="container mx-auto py-4 px-5 flex flex-wrap justify-center"><p class="text-gray-500 dark:text-gray-400 text-sm text-center">© 2025 - Proyek Studi Kuliah Blockchain dengan Python</p></div>
+            <!--<div class="container mx-auto py-4 px-5 flex flex-wrap flex-col sm:flex-row"><p class="text-gray-500 dark:text-gray-400 text-sm text-center sm:text-left">© 2025 - JKT48 NFT Ticketing | Dibuat sebagai Proyek Studi Blockchain</p></div>-->
+        </footer>
+    </div>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

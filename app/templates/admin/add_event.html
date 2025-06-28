@@ -1,0 +1,20 @@
+<!-- D:\jkt48-nft-app\app\templates\admin\add_event.html -->
+<!-- Halaman untuk menambah event baru. -->
+{% extends "layout.html" %}
+{% block content %}
+
+<!-- Fixed, Blurred Background with Dark/Light Mode Overlay -->
+<div class="fixed top-0 left-0 w-full h-full z-[-1]">
+    <!-- The actual blurred image -->
+    <div class="absolute inset-0 bg-cover bg-center filter blur-md" style="background-image: url('{{ url_for('static', filename='wpp-con1.jpg') }}');"></div>
+    <!-- Overlay to adjust for light/dark mode -->
+    <div class="absolute inset-0 bg-white/30 dark:bg-black/10"></div>
+</div>
+<br>
+<div class="max-w-2xl mx-auto">
+    <h1 class="text-3xl font-bold font-display mb-6 text-gray-800 dark:text-white">Tambah Event Baru</h1>
+    <div class="bg-white dark:bg-dark-card shadow-lg rounded-lg p-6">
+        {% include 'admin/_event_form.html' %}
+    </div>
+</div>
+{% endblock %}
